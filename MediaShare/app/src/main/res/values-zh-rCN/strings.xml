@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">音乐享</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="main_local_music">本地音乐</string>
+    <string name="main_online_music">网友分享</string>
+    <string name="main_shared_music">我的互动</string>
+    <string name="main_setting">设置</string>
+
+    <string name="default_user_name">匿名用户</string>
+
+</resources>
