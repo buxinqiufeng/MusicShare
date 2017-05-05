@@ -21,15 +21,15 @@ public class OnlineMusicInfo extends MusicInfoBase implements Parcelable {
         readFromParcel(in);
     }
 
-    public static final Creator<LocalMusicInfo> CREATOR = new Creator<LocalMusicInfo>() {
+    public static final Creator<OnlineMusicInfo> CREATOR = new Creator<OnlineMusicInfo>() {
         @Override
-        public LocalMusicInfo createFromParcel(Parcel in) {
-            return new LocalMusicInfo(in);
+        public OnlineMusicInfo createFromParcel(Parcel in) {
+            return new OnlineMusicInfo(in);
         }
 
         @Override
-        public LocalMusicInfo[] newArray(int size) {
-            return new LocalMusicInfo[size];
+        public OnlineMusicInfo[] newArray(int size) {
+            return new OnlineMusicInfo[size];
         }
     };
 

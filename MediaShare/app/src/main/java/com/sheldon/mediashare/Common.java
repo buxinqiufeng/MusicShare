@@ -16,6 +16,8 @@ public class Common {
     public static final String ACTION_START_ALLINONE = "android.sheldon.mediashare.action.START_ALLINONE";
     public static final int MIN_MUSIC_SIZE = 1000*1000;//设置最小歌曲大小为1M.
 
+    public static final boolean MOCK_MODE = true;
+
     public static Intent generateIntentForService(Context context, String action) {
         Intent intent = new Intent();
         intent.setAction(action);

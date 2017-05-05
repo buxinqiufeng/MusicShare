@@ -1,20 +1,31 @@
 package com.sheldon.mediashare;
 
 import android.app.Fragment;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sheldon.mediashare.music.IOnlineMusicChangedCallback;
 import com.sheldon.mediashare.music.LocalMusicInfo;
+import com.sheldon.mediashare.music.LocalMusicManager;
 import com.sheldon.mediashare.music.OnlineMusicInfo;
+import com.sheldon.mediashare.music.OnlineMusicManager;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -25,10 +36,12 @@ import java.util.List;
  */
 
 public class OnlineMusicFragment extends BaseFragment {
+    private static final String TAG = "OnlineMusicFragment";
 
-    private TextView mTextviewSearch;
-    private Button mBtnSearch;
+    private EditText mEditTextSearch;
+    private ImageView mBtnSearch;
     private ListView mListview;
+    private ListAdapter mListAdapter;
     private List<TopBoard> mTopboardList = new ArrayList<TopBoard>();
 
     private Context mContext;
@@ -39,12 +52,12 @@ public class OnlineMusicFragment extends BaseFragment {
 
         mContext = getContext();
 
-        mTextviewSearch = (TextView) view.findViewById(R.id.tv_online_search);
-        mBtnSearch = (Button) view.findViewById(R.id.bt_online_search);
+        mEditTextSearch = (EditText) view.findViewById(R.id.tv_online_search);
+        mBtnSearch = (ImageView) view.findViewById(R.id.iv_online_search);
         mListview = (ListView) view.findViewById(R.id.lv_online_topboard);
 
-        ListAdapter adapter = new ListAdapter();
-        mListview.setAdapter(adapter);
+        mListAdapter = new ListAdapter();
+        mListview.setAdapter(mListAdapter);
         mListview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -53,6 +66,77 @@ public class OnlineMusicFragment extends BaseFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        mContext.bindService(Common.generateIntentForService(mContext, Common.ACTION_START_ALLINONE), mAllInOneConn, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mContext.unbindService(mAllInOneConn);
+    }
+
+    private IAllInOneService mAllinOneService;
+    private ServiceConnection mAllInOneConn = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mAllinOneService = IAllInOneService.Stub.asInterface(iBinder);
+            try {
+                Log.i(TAG, "registOnlineMusicChangedListener");
+                mAllinOneService.registOnlineMusicChangedListener(mOnlineMusicChangedCallback);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mAllinOneService = null;
+        }
+    };
+
+    private IOnlineMusicChangedCallback mOnlineMusicChangedCallback = new IOnlineMusicChangedCallback() {
+
+        @Override
+        public void onChanged(int grouptype, String groupname, int changetype, List<OnlineMusicInfo> list) throws RemoteException {
+            Log.i(TAG, "ILocalMusicChangedCallback-onChanged,grouptype="+grouptype+", groupname="+groupname+", changetype="+changetype);
+            switch (grouptype) {
+                case OnlineMusicManager.TOP_BOARD_GROUP://top board中音乐有变化
+                    TopBoard topBoard = getTopboardByName(groupname);
+                    if(null == topBoard) {
+                        topBoard = new TopBoard();
+                        topBoard.title = groupname;
+                        mTopboardList.add(topBoard);
+                    }
+                    if(OnlineMusicManager.MUSIC_CHANGE_REFRESH == changetype) {
+                        topBoard.mMusicList.clear();
+                    }
+
+                    topBoard.mMusicList.addAll(list);
+                    mListAdapter.notifyDataSetChanged();
+                    break;
+                default:
+            }
+        }
+
+        @Override
+        public IBinder asBinder() {
+            return null;
+        }
+    };
+
+    private TopBoard getTopboardByName(String name) {
+        for(TopBoard board : mTopboardList) {
+            if(board.title.equals(name)) {
+                return board;
+            }
+        }
+        return null;
     }
 
     private class ListAdapter extends BaseAdapter {
@@ -81,7 +165,7 @@ public class OnlineMusicFragment extends BaseFragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
             ListItemHolder holder = null;
             if(null == view) {
-                view = mListContainer.inflate(R.layout.local_music_list_item, null);
+                view = mListContainer.inflate(R.layout.music_top_board_list_item, null);
                 holder = new ListItemHolder();
                 holder.tvTitle = (TextView) view.findViewById(R.id.tv_top_board_title);
                 holder.tvUpdatetime = (TextView) view.findViewById(R.id.tv_top_board_updatetime);
@@ -111,18 +195,19 @@ public class OnlineMusicFragment extends BaseFragment {
 
     private String getItemString(int index, List<OnlineMusicInfo> list) {
         if(null == list || list.size()-1 < index) return "";
-
+Log.d(TAG, "getItemString-musicinfo="+list.get(index));
         return String.format("%d.%s", index+1, generateShotItem(list.get(index)));
     }
 
     private String generateShotItem(OnlineMusicInfo musicInfo) {
         String str = musicInfo.displayName;
-        if(null != musicInfo.title && null != musicInfo.artist) {
+        if(null != musicInfo.title && musicInfo.title.length() > 0
+                && null != musicInfo.artist && musicInfo.artist.length() > 0) {
             str = musicInfo.title+"("+musicInfo.artist+")";
         } else {
             return str;
         }
-        if(null != musicInfo.album) {
+        if(null != musicInfo.album && musicInfo.album.length() > 0) {
             str += " - "+musicInfo.album;
         }
         return str;

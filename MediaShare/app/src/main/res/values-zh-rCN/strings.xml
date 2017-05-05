@@ -11,5 +11,6 @@
     <string name="main_setting">设置</string>
 
     <string name="default_user_name">匿名用户</string>
+    <string name="online_search_box_hint">搜索歌曲名或歌手名...</string>
 
 </resources>

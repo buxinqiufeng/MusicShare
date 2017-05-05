@@ -8,14 +8,17 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.sheldon.mediashare.music.ILocalMusicChangedCallback;
+import com.sheldon.mediashare.music.IOnlineMusicChangedCallback;
 import com.sheldon.mediashare.music.LocalMusicInfo;
 import com.sheldon.mediashare.music.LocalMusicManager;
+import com.sheldon.mediashare.music.OnlineMusicManager;
 
 import java.util.ArrayList;
 
 public class AllInOneService extends Service {
     private static final String TAG = "AllInOneService";
     private LocalMusicManager mLocalMusicManager;
+    private OnlineMusicManager mOnlineMusicManager;
 
     public AllInOneService() {
     }
@@ -27,6 +30,8 @@ public class AllInOneService extends Service {
 
         mLocalMusicManager = new LocalMusicManager(this.getApplicationContext());
         mLocalMusicManager.startScan();
+
+        mOnlineMusicManager = new OnlineMusicManager(this.getApplicationContext());
     }
 
     @Nullable
@@ -41,6 +46,12 @@ public class AllInOneService extends Service {
         public void registLocalMusicChangedListener(ILocalMusicChangedCallback cb) throws RemoteException {
             Log.i(TAG, "registLocalMusicChangedListener");
             mLocalMusicManager.registListener(cb);
+        }
+
+        @Override
+        public void registOnlineMusicChangedListener(IOnlineMusicChangedCallback cb) throws RemoteException {
+            Log.i(TAG, "registOnlineMusicChangedListener");
+            mOnlineMusicManager.registListener(cb);
         }
     };
 
