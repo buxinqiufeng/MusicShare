@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -161,11 +162,14 @@ public class OnlineMusicFragment extends BaseFragment {
             return 0;
         }
 
+        private int colorPicker[] = {0xcce60707, 0xccFF4081, 0xcc3F51B5};
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
             ListItemHolder holder = null;
             if(null == view) {
                 view = mListContainer.inflate(R.layout.music_top_board_list_item, null);
+                LinearLayout layout_bg = (LinearLayout)view.findViewById(R.id.layout_bg);
+                layout_bg.setBackgroundColor(colorPicker[i%colorPicker.length]);
                 holder = new ListItemHolder();
                 holder.tvTitle = (TextView) view.findViewById(R.id.tv_top_board_title);
                 holder.tvUpdatetime = (TextView) view.findViewById(R.id.tv_top_board_updatetime);

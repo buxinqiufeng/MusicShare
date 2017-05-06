@@ -65,7 +65,7 @@
                 android:layout_gravity="center"
                 android:maxWidth="20dp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/favorite"/>
+                android:src="@drawable/favorite_red"/>
         </RelativeLayout>
 
     </LinearLayout>

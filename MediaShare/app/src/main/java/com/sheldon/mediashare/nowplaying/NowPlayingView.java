@@ -1,6 +1,7 @@
 package com.sheldon.mediashare.nowplaying;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.provider.ContactsContract;
@@ -52,6 +53,7 @@ public class NowPlayingView extends LinearLayout {
 
         setOrientation(LinearLayout.HORIZONTAL);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_nowplaying, this, true);
+        setBackgroundColor(0x00494949);//浅灰色
 
         mImageviewPlay = (ImageView) view.findViewById(R.id.iv_play_status);
         mTextviewSongName = (TextView) view.findViewById(R.id.tv_playing_song);
@@ -73,6 +75,13 @@ public class NowPlayingView extends LinearLayout {
         } else {
             mImageviewPlay.setMaxWidth(64);
         }
+
+        mImageviewPrise.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
