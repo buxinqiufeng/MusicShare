@@ -91,22 +91,22 @@ public class MainActivity extends FragmentActivity implements BaseFragment.OnPla
         List<BaseFragment> fragments = new ArrayList<BaseFragment>();
 
         BaseFragment LocalMusicFragment = new LocalMusicFragment();
-        LocalMusicFragment.setTitle(getString(R.string.main_local_music));
+        LocalMusicFragment.setTitle(mContext.getString(R.string.main_local_music));
         LocalMusicFragment.setIconId(R.drawable.tab_local_music_selector);
         fragments.add(LocalMusicFragment);
 
         BaseFragment noteFragment = new OnlineMusicFragment();
-        noteFragment.setTitle(getString(R.string.main_online_music));
+        noteFragment.setTitle(mContext.getString(R.string.main_online_music));
         noteFragment.setIconId(R.drawable.tab_online_music_selector);
         fragments.add(noteFragment);
 
-        BaseFragment contactFragment = new BaseFragment();
-        contactFragment.setTitle(getString(R.string.main_shared_music));
+        BaseFragment contactFragment = new NotificationFragment();
+        contactFragment.setTitle(mContext.getString(R.string.main_notification));
         contactFragment.setIconId(R.drawable.tab_shared_selector);
         fragments.add(contactFragment);
 
         BaseFragment settingFragment = new SettingFragment();
-        settingFragment.setTitle(getString(R.string.main_setting));
+        settingFragment.setTitle(mContext.getString(R.string.main_setting));
         settingFragment.setIconId(R.drawable.tab_setting_selector);
         fragments.add(settingFragment);
 

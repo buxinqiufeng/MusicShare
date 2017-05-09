@@ -53,7 +53,7 @@ public class NowPlayingView extends LinearLayout {
 
         setOrientation(LinearLayout.HORIZONTAL);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_nowplaying, this, true);
-        setBackgroundColor(0x00494949);//浅灰色
+        setBackgroundColor(0x025683);//浅灰色
 
         mImageviewPlay = (ImageView) view.findViewById(R.id.iv_play_status);
         mTextviewSongName = (TextView) view.findViewById(R.id.tv_playing_song);

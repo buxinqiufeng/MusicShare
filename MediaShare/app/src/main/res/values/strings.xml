@@ -7,10 +7,24 @@
 
     <string name="main_local_music">本地音乐</string>
     <string name="main_online_music">网友分享</string>
-    <string name="main_shared_music">我的互动</string>
+    <string name="main_notification">我的消息</string>
     <string name="main_setting">设置</string>
 
     <string name="default_user_name">匿名用户</string>
     <string name="online_search_box_hint">搜索歌曲名或歌手名...</string>
+
+    <string name="setting_friend">我的好友</string>
+    <string name="setting_fans">我的粉丝</string>
+    <string name="setting_feedback">用户反馈</string>
+    <string name="setting_about">应用信息</string>
+
+    <string name="setting_friend_summary">查看你的好友信息</string>
+    <string name="setting_fans_summary">查看你的粉丝</string>
+    <string name="setting_feedback_summary">反馈使用问题</string>
+    <string name="setting_about_summary">查看应用详情</string>
+
+    <string name="notification_category_system">未读系统消息</string>
+    <string name="notification_category_group">未读群组消息</string>
+    <string name="notification_category_friend">未读好友消息</string>
 
 </resources>
